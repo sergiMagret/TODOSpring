@@ -1,17 +1,9 @@
 package org.udg.pds.springtodo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.udg.pds.springtodo.serializer.JsonDateDeserializer;
-import org.udg.pds.springtodo.serializer.JsonDateSerializer;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 @Entity(name = "usergroup")
 public class Group implements Serializable {
@@ -46,7 +38,6 @@ public class Group implements Serializable {
         this.description = description;
     }
 
-    @JsonView(Views.Private.class)
     public Long getId() {
         return id;
     }
@@ -55,33 +46,34 @@ public class Group implements Serializable {
         this.id = id;
     }
 
-    @JsonIgnore
     public User getOwner() {
         return owner;
     }
 
     public void setOwner(User owner) {
+        if(!this.members.contains(owner))
+            this.members.add(owner);
         this.owner = owner;
     }
 
-    @JsonView(Views.Complete.class)
+    public void addMember(User u) {
+        this.members.add(u);
+    }
+
     public Collection<User> getMembers() {
-        return members;
+        return this.members;
     }
 
-    @JsonView(Views.Private.class)
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
-    @JsonView(Views.Private.class)
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    @JsonView(Views.Complete.class)
     public long getUserId() {
-        return userId;
+        return this.userId;
     }
 
 }
